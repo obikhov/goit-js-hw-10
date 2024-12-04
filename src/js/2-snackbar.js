@@ -1,52 +1,42 @@
-import iziToast from "https://cdn.jsdelivr.net/npm/izitoast";
-import "https://cdn.jsdelivr.net/npm/izitoast/dist/css/iziToast.min.css";
+// Імпорт iziToast і стилів
+import iziToast from 'izitoast';
+import 'izitoast/dist/css/iziToast.min.css';
 
+// Отримання форми
 const form = document.querySelector('.form');
 
+// Обробник події submit
 form.addEventListener('submit', (event) => {
   event.preventDefault();
 
-  // Отримуємо дані з форми
-  const delayInput = form.elements['delay'];
-  const stateInput = form.elements['state'];
-  const delay = parseInt(delayInput.value, 10);
-  const state = stateInput.value;
+  // Отримання значень форми
+  const delay = parseInt(form.elements.delay.value, 10);
+  const state = form.elements.state.value;
 
-  if (isNaN(delay) || delay <= 0) {
-    iziToast.error({
-      title: "Error",
-      message: "Please enter a valid delay in milliseconds",
-      position: "topRight",
-    });
-    return;
-  }
-
-  // Створюємо проміс
-  createPromise(delay, state)
-    .then((message) => {
-      iziToast.success({
-        title: "Success",
-        message: message,
-        position: "topRight",
-      });
-    })
-    .catch((message) => {
-      iziToast.error({
-        title: "Error",
-        message: message,
-        position: "topRight",
-      });
-    });
-});
-
-function createPromise(delay, state) {
-  return new Promise((resolve, reject) => {
+  // Створення промісу
+  const promise = new Promise((resolve, reject) => {
     setTimeout(() => {
       if (state === 'fulfilled') {
-        resolve(`✅ Fulfilled promise in ${delay}ms`);
-      } else if (state === 'rejected') {
-        reject(`❌ Rejected promise in ${delay}ms`);
+        resolve(delay);
+      } else {
+        reject(delay);
       }
     }, delay);
   });
-}
+
+  // Обробка результатів промісу
+  promise
+    .then((delay) => {
+      iziToast.success({
+        title: '✅ Success',
+        message: `Fulfilled promise in ${delay}ms`,
+      });
+    })
+    .catch((delay) => {
+      iziToast.error({
+        title: '❌ Error',
+        message: `Rejected promise in ${delay}ms`,
+      });
+    });
+});
+import 'izitoast/dist/css/iziToast.min.css';
